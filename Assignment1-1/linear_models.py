@@ -21,6 +21,39 @@ class LinearRegression():
         """
         # ====================================
         # YOUR CODE GOES HERE
+        # print(X.shape)
+        # print(y.shape)
+        X = np.column_stack((np.ones(np.size(X)), X))
+        # y = y.reshape(1000,1)
+        # print(X.shape)
+        # print(y.shape)
+
+        theta = np.linalg.pinv(X) @ y
+
+        for i in range(self.n_iterations):
+            cost = 0
+
+            # Shuffle data
+            r = np.random.randint(0, len(X))
+            X = X[r]
+            y = y[r]
+
+            # SGD
+            for xi, yi in zip(X, y):
+                # Make prediction
+                y_hat = theta @ X
+                # Gradient weights and bias
+                grad_w = -2*y_hat*(1-y_hat) * (yi-y_hat) * xi
+                grad_b = -2*y_hat*(1-y_hat) * (yi-y_hat)
+                # Update weigths and bias of model
+                self.weights += -self.lr * grad_w
+                self.bias += -self.lr * grad_b
+                # cost-function
+                cost += (y - y_hat)**2
+            # Loss-function and added to history, MSE
+            self.loss_history.append(cost)
+
+            
         # ====================================
         raise NotImplementedError("LinearRegression.fit is not implemented yet.")
     
