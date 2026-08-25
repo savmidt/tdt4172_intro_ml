@@ -21,39 +21,34 @@ class LinearRegression():
         """
         # ====================================
         # YOUR CODE GOES HERE
-        # print(X.shape)
-        # print(y.shape)
-        X = np.column_stack((np.ones(np.size(X)), X))
-        # y = y.reshape(1000,1)
-        # print(X.shape)
-        # print(y.shape)
 
-        theta = np.linalg.pinv(X) @ y
+        m, n = np.shape(X)
+        self.weights = np.random.uniform()
+        self.bias = np.random.uniform()
 
-        for i in range(self.n_iterations):
-            cost = 0
+        for _ in range(self.n_iterations):
+            r = np.random.randint(m)
+            xi = X[r]
+            yi = y[r]
 
-            # Shuffle data
-            r = np.random.randint(0, len(X))
-            X = X[r]
-            y = y[r]
+            # Make prediction
+            y_hat = xi * self.weights + self.bias
+            # Error
+            error = y_hat - yi
 
-            # SGD
-            for xi, yi in zip(X, y):
-                # Make prediction
-                y_hat = theta @ X
-                # Gradient weights and bias
-                grad_w = -2*y_hat*(1-y_hat) * (yi-y_hat) * xi
-                grad_b = -2*y_hat*(1-y_hat) * (yi-y_hat)
-                # Update weigths and bias of model
-                self.weights += -self.lr * grad_w
-                self.bias += -self.lr * grad_b
-                # cost-function
-                cost += (y - y_hat)**2
-            # Loss-function and added to history, MSE
-            self.loss_history.append(cost)
+            # Gradient weights and bias
+            grad_w = 2 * error * xi
+            grad_b = 2 * error
 
-            
+            # Update weigths and bias of model
+            self.weights += -self.lr * grad_w
+            self.bias += -self.lr * grad_b
+
+            # Prediksjon over hele datasettet
+            pred = X * self.weights + self.bias
+            loss = np.mean((y - pred) ** 2)
+            self.loss_history.append(loss)
+        return self
         # ====================================
         raise NotImplementedError("LinearRegression.fit is not implemented yet.")
     
@@ -72,6 +67,7 @@ class LinearRegression():
         """
         # ====================================
         # YOUR CODE GOES HERE
+        return X * self.weights + self.bias
         # ====================================
         raise NotImplementedError("LinearRegression.predict is not implemented yet.")
     
@@ -89,6 +85,7 @@ class LogisticRegression():
         # ====================================
         # YOUR CODE GOES HERE
         # ====================================
+        
         raise NotImplementedError("LogisticRegression.fit is not implemented yet.")
     
     def predict_proba(self, X):
@@ -107,4 +104,5 @@ class LogisticRegression():
         # ====================================
         # YOUR CODE GOES HERE
         # ====================================
+        return 1 / (1 + (np.e)**(-z))
         raise NotImplementedError("LogisticRegression.sigmoid is not implemented yet.")
