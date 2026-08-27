@@ -85,12 +85,9 @@ class LogisticRegression():
         # ====================================
         # YOUR CODE GOES HERE
         # ====================================
-        print("Running fit")
         m, n = np.shape(X)
         self.weights = np.random.uniform(size=n)
         self.bias = np.random.uniform()
-        print(f'Weights: {self.weights}')
-        print(f'Bias: {self.bias}')
 
         for _ in range(self.n_iterations):
             pred = self.predict_proba(X)
@@ -106,8 +103,6 @@ class LogisticRegression():
             pred = np.clip(pred, eps, 1-eps)
             loss = np.mean(-y * np.log(pred) - (1 - y) * np.log(1 - pred))
             self.loss_history.append(loss)
-        print(f'Weights: {self.weights}')
-        print(f'Bias: {self.bias}')
         return self
         # raise NotImplementedError("LogisticRegression.fit is not implemented yet.")
     
