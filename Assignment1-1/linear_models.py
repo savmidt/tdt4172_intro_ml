@@ -85,24 +85,53 @@ class LogisticRegression():
         # ====================================
         # YOUR CODE GOES HERE
         # ====================================
-        
-        raise NotImplementedError("LogisticRegression.fit is not implemented yet.")
+        print("Running fit")
+        m, n = np.shape(X)
+        self.weights = np.random.uniform(size=n)
+        self.bias = np.random.uniform()
+        print(f'Weights: {self.weights}')
+        print(f'Bias: {self.bias}')
+
+        for _ in range(self.n_iterations):
+            pred = self.predict_proba(X)
+            # print("gradienter")
+            grad_w = (pred - y) @ X / m
+            grad_b = np.mean(pred - y)
+
+            # print("Oppdater")
+            self.weights += -self.lr * grad_w
+            self.bias += -self.lr * grad_b
+
+            eps = 1e-5
+            pred = np.clip(pred, eps, 1-eps)
+            loss = np.mean(-y * np.log(pred) - (1 - y) * np.log(1 - pred))
+            self.loss_history.append(loss)
+        print(f'Weights: {self.weights}')
+        print(f'Bias: {self.bias}')
+        return self
+        # raise NotImplementedError("LogisticRegression.fit is not implemented yet.")
     
     def predict_proba(self, X):
         # ====================================
         # YOUR CODE GOES HERE
         # ====================================
-        raise NotImplementedError("LogisticRegression.predict_proba is not implemented yet.")
+        # print("Proba")
+        z = X @ self.weights + self.bias
+        return self.sigmoid(z)
+        # raise NotImplementedError("LogisticRegression.predict_proba is not implemented yet.")
         
     def predict(self, X):
         # ====================================
         # YOUR CODE GOES HERE
         # ====================================
-        raise NotImplementedError("LogisticRegression.predict is not implemented yet.")
+        return [1.0 if _y > 0.5 else 0.0 for _y in self.predict_proba(X)]
+        # return (self.predict_proba(X) > 0.5).astype(float)
+        # raise NotImplementedError("LogisticRegression.predict is not implemented yet.")
     
     def sigmoid(self, z):
         # ====================================
         # YOUR CODE GOES HERE
         # ====================================
-        return 1 / (1 + (np.e)**(-z))
-        raise NotImplementedError("LogisticRegression.sigmoid is not implemented yet.")
+        z = np.clip(z, -100, 100)
+        return 1 / (1 + np.exp(-z))
+        # raise NotImplementedError("LogisticRegression.sigmoid is not implemented yet.")
